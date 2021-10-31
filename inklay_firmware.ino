@@ -11,9 +11,10 @@
 #define CHANNEL_PRODUCTION
 
 // SPI
-#define DISPLAY_75INCH_2COLOR
+// #define DISPLAY_75INCH_2COLOR
 // #define DISPLAY_75INCH_3COLOR
 // #define DISPLAY_565INCH_7COLOR
+#define DISPLAY_106INCH_3COLOR
 
 // Parallel
 // #define DISPLAY_6INCH_2COLOR
@@ -94,6 +95,8 @@ const char *clientDisplayType = "6in_2color";
 const char *clientDisplayType = "7in5_3color";
 #elif defined(DISPLAY_565INCH_7COLOR)
 const char *clientDisplayType = "5in65_7color";
+#elif defined(DISPLAY_106INCH_3COLOR)
+const char *clientDisplayType = "10in6_3color";
 #endif
 
 // Startup Mode Enum
@@ -144,6 +147,10 @@ bool with_color = true;
 // 6in 2-Color
 GxEPD2_BW<GxEPD2_it60_1448x1072, GxEPD2_it60_1448x1072::HEIGHT / 4> display(GxEPD2_it60_1448x1072(/*CS=5*/ 0, /*DC=*/17, /*RST=*/16, /*BUSY=*/4));
 bool with_color = false;
+#elif defined(DISPLAY_106INCH_3COLOR)
+// 10in6 3-Color GDEH116Z91 960x640
+GxEPD2_3C<GxEPD2_750c_Z90, GxEPD2_750c_Z90::HEIGHT / 8> display(GxEPD2_750c_Z90(/*CS=5*/ 0, /*DC=*/17, /*RST=*/16, /*BUSY=*/4)); // GDEH075Z90 880x52
+bool with_color = true;
 #endif
 
 // Time
@@ -191,6 +198,9 @@ static const uint16_t max_row_width = 600;
 #elif defined(DISPLAY_6INCH_2COLOR)
 static const uint16_t input_buffer_pixels = 1448;
 static const uint16_t max_row_width = 1448;
+#elif defined(DISPLAY_106INCH_3COLOR)
+static const uint16_t input_buffer_pixels = 960;
+static const uint16_t max_row_width = 960;
 #endif
 
 static const uint16_t max_palette_pixels = 256;       // for depth <= 8
@@ -329,6 +339,8 @@ void setup()
     loadBitmapFromHTTPS(firebaseStorageHost, firebaseStorageURL, 0, 0, with_color);
 #elif defined(DISPLAY_565INCH_7COLOR)
     showBitmapFrom_HTTPS_Buffered(firebaseStorageHost, firebaseStorageURL, 0, 0);
+#elif defined(DISPLAY_106INCH_3COLOR)
+    loadBitmapFromHTTPS(firebaseStorageHost, firebaseStorageURL, 0, 0, with_color);
 #endif
 
     // Deep Sleep
