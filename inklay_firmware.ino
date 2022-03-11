@@ -7,14 +7,14 @@
 // Config
 #define CLIENT_VERSION "0.0.10"
 
-// #define CHANNEL_BETA
-#define CHANNEL_PRODUCTION
+#define CHANNEL_BETA
+// #define CHANNEL_PRODUCTION
 
 // SPI
-// #define DISPLAY_75INCH_2COLOR
+#define DISPLAY_75INCH_2COLOR
 // #define DISPLAY_75INCH_3COLOR
 // #define DISPLAY_565INCH_7COLOR
-#define DISPLAY_106INCH_3COLOR
+// #define DISPLAY_106INCH_3COLOR
 
 // Parallel
 // #define DISPLAY_6INCH_2COLOR
@@ -1080,6 +1080,7 @@ void execOTA(String serverPath, String filename, String serverVersion)
 
       // read headers
       String line = client.readStringUntil('\n');
+      Serial.println(line);
 
       // remove space, to check if the line is end of headers
       line.trim();
@@ -1099,6 +1100,7 @@ void execOTA(String serverPath, String filename, String serverVersion)
       {
         if (line.indexOf("200") < 0)
         {
+          Serial.println(line);
           Serial.println("update failed: server not responding");
 
           // Show error page
@@ -1109,16 +1111,16 @@ void execOTA(String serverPath, String filename, String serverVersion)
       }
 
       // extract headers: Get content length
-      if (line.startsWith("Content-Length: "))
+      if (line.startsWith("content-length: "))
       {
-        contentLength = atol((getHeaderValue(line, "Content-Length: ")).c_str());
+        contentLength = atol((getHeaderValue(line, "content-length: ")).c_str());
         Serial.println("got " + String(contentLength) + " bytes from server");
       }
 
       // extract headers: Get content type
-      if (line.startsWith("Content-Type: "))
+      if (line.startsWith("content-type: "))
       {
-        String contentType = getHeaderValue(line, "Content-Type: ");
+        String contentType = getHeaderValue(line, "content-type: ");
         Serial.println("got " + contentType + " payload");
         if (contentType == "application/octet-stream")
         {
