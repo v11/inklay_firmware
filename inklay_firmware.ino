@@ -5,7 +5,7 @@
 // 4. Select Serial Port
 
 // Config
-#define CLIENT_VERSION "0.0.10"
+#define CLIENT_VERSION "0.0.11"
 
 #define CHANNEL_BETA
 // #define CHANNEL_PRODUCTION
@@ -1080,10 +1080,12 @@ void execOTA(String serverPath, String filename, String serverVersion)
 
       // read headers
       String line = client.readStringUntil('\n');
-      Serial.println(line);
 
       // remove space, to check if the line is end of headers
       line.trim();
+
+      // bring header line to lowercase for propper checking (if webserver would change lower, uppercase of headers)
+      line.toLowerCase();
 
       // If the the line is empty, this is end of headers
       // break the while and feed the remaining "client" to the Update.writeStream();
@@ -1096,7 +1098,7 @@ void execOTA(String serverPath, String filename, String serverVersion)
 
       // Check if the HTTP Response is 200 (OK)
       // else break and Exit Update
-      if (line.startsWith("HTTP/1.1"))
+      if (line.startsWith("http/1.1"))
       {
         if (line.indexOf("200") < 0)
         {
